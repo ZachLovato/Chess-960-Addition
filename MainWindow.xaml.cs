@@ -813,6 +813,15 @@ namespace Chess
             await NewGame();
         }
 
+        // Chess 960
+        private async void NewGame960_Click(object sender, RoutedEventArgs e)
+        {
+            whiteIsComputer = false;
+            blackIsComputer = false;
+            await NewGame();
+        }
+
+
         private async void NewGameCpuOnly_Click(object sender, RoutedEventArgs e)
         {
             whiteIsComputer = true;

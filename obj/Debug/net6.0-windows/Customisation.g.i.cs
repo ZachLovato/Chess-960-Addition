@@ -182,7 +182,7 @@ namespace Chess {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Chess;V1.0.0.0;component/customisation.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Chess;component/customisation.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Customisation.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

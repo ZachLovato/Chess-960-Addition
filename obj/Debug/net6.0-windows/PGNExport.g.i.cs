@@ -93,7 +93,7 @@ namespace Chess {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Chess;V1.0.0.0;component/pgnexport.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Chess;component/pgnexport.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\PGNExport.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
