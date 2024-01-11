@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -68,7 +69,7 @@ namespace Chess
         /// <summary>
         /// Create a new standard chess game with all values at their defaults
         /// </summary>
-        public ChessGame()
+        public ChessGame(bool isDefault = true)
         {
             CurrentTurnWhite = true;
             GameOver = false;
@@ -82,27 +83,130 @@ namespace Chess
             CapturedPieces = new List<Pieces.Piece>();
 
             EnPassantSquare = null;
-            WhiteMayCastleKingside = true;
-            WhiteMayCastleQueenside = true;
-            BlackMayCastleKingside = true;
-            BlackMayCastleQueenside = true;
+            WhiteMayCastleKingside = false;
+            WhiteMayCastleQueenside = false;
+            BlackMayCastleKingside = false;
+            BlackMayCastleQueenside = false;
 
             StaleMoveCounter = 0;
             BoardCounts = new Dictionary<string, int>();
 
-            Board = new Pieces.Piece?[8, 8]
+            if (isDefault)
             {
-                { new Pieces.Rook(new Point(0, 0), true), new Pieces.Pawn(new Point(0, 1), true), null, null, null, null, new Pieces.Pawn(new Point(0, 6), false), new Pieces.Rook(new Point(0, 7), false) },
-                { new Pieces.Knight(new Point(1, 0), true), new Pieces.Pawn(new Point(1, 1), true), null, null, null, null, new Pieces.Pawn(new Point(1, 6), false), new Pieces.Knight(new Point(1, 7), false) },
-                { new Pieces.Bishop(new Point(2, 0), true), new Pieces.Pawn(new Point(2, 1), true), null, null, null, null, new Pieces.Pawn(new Point(2, 6), false), new Pieces.Bishop(new Point(2, 7), false) },
-                { new Pieces.Queen(new Point(3, 0), true), new Pieces.Pawn(new Point(3, 1), true), null, null, null, null, new Pieces.Pawn(new Point(3, 6), false), new Pieces.Queen(new Point(3, 7), false) },
-                { WhiteKing, new Pieces.Pawn(new Point(4, 1), true), null, null, null, null, new Pieces.Pawn(new Point(4, 6), false), BlackKing },
-                { new Pieces.Bishop(new Point(5, 0), true), new Pieces.Pawn(new Point(5, 1), true), null, null, null, null, new Pieces.Pawn(new Point(5, 6), false), new Pieces.Bishop(new Point(5, 7), false) },
-                { new Pieces.Knight(new Point(6, 0), true), new Pieces.Pawn(new Point(6, 1), true), null, null, null, null, new Pieces.Pawn(new Point(6, 6), false), new Pieces.Knight(new Point(6, 7), false) },
-                { new Pieces.Rook(new Point(7, 0), true), new Pieces.Pawn(new Point(7, 1), true), null, null, null, null, new Pieces.Pawn(new Point(7, 6), false), new Pieces.Rook(new Point(7, 7), false) }
-            };
+				Board = new Pieces.Piece?[8, 8]
+			    {
+				    { new Pieces.Rook(new Point(0, 0), true), new Pieces.Pawn(new Point(0, 1), true), null, null, null, null, new Pieces.Pawn(new Point(0, 6), false), new Pieces.Rook(new Point(0, 7), false) },
+				    { new Pieces.Knight(new Point(1, 0), true), new Pieces.Pawn(new Point(1, 1), true), null, null, null, null, new Pieces.Pawn(new Point(1, 6), false), new Pieces.Knight(new Point(1, 7), false) },
+				    { new Pieces.Bishop(new Point(2, 0), true), new Pieces.Pawn(new Point(2, 1), true), null, null, null, null, new Pieces.Pawn(new Point(2, 6), false), new Pieces.Bishop(new Point(2, 7), false) },
+				    { new Pieces.Queen(new Point(3, 0), true), new Pieces.Pawn(new Point(3, 1), true), null, null, null, null, new Pieces.Pawn(new Point(3, 6), false), new Pieces.Queen(new Point(3, 7), false) },
+				    { WhiteKing, new Pieces.Pawn(new Point(4, 1), true), null, null, null, null, new Pieces.Pawn(new Point(4, 6), false), BlackKing },
+				    { new Pieces.Bishop(new Point(5, 0), true), new Pieces.Pawn(new Point(5, 1), true), null, null, null, null, new Pieces.Pawn(new Point(5, 6), false), new Pieces.Bishop(new Point(5, 7), false) },
+				    { new Pieces.Knight(new Point(6, 0), true), new Pieces.Pawn(new Point(6, 1), true), null, null, null, null, new Pieces.Pawn(new Point(6, 6), false), new Pieces.Knight(new Point(6, 7), false) },
+				    { new Pieces.Rook(new Point(7, 0), true), new Pieces.Pawn(new Point(7, 1), true), null, null, null, null, new Pieces.Pawn(new Point(7, 6), false), new Pieces.Rook(new Point(7, 7), false) }
+			    };
+			}
+            else
+            {
+                char[] chessPiece = getChess960Setup();
+
+
+				Board = new Pieces.Piece?[8, 8]
+				{
+					{ new Pieces.Rook(new Point(0, 0), true), new Pieces.Pawn(new Point(0, 1), true), null, null, null, null, new Pieces.Pawn(new Point(0, 6), false), new Pieces.Rook(new Point(0, 7), false) },
+					{ new Pieces.Knight(new Point(1, 0), true), new Pieces.Pawn(new Point(1, 1), true), null, null, null, null, new Pieces.Pawn(new Point(1, 6), false), new Pieces.Knight(new Point(1, 7), false) },
+					{ new Pieces.Bishop(new Point(2, 0), true), new Pieces.Pawn(new Point(2, 1), true), null, null, null, null, new Pieces.Pawn(new Point(2, 6), false), new Pieces.Bishop(new Point(2, 7), false) },
+					{ new Pieces.Queen(new Point(3, 0), true), new Pieces.Pawn(new Point(3, 1), true), null, null, null, null, new Pieces.Pawn(new Point(3, 6), false), new Pieces.Queen(new Point(3, 7), false) },
+					{ WhiteKing, new Pieces.Pawn(new Point(4, 1), true), null, null, null, null, new Pieces.Pawn(new Point(4, 6), false), BlackKing },
+					{ new Pieces.Bishop(new Point(5, 0), true), new Pieces.Pawn(new Point(5, 1), true), null, null, null, null, new Pieces.Pawn(new Point(5, 6), false), new Pieces.Bishop(new Point(5, 7), false) },
+					{ new Pieces.Knight(new Point(6, 0), true), new Pieces.Pawn(new Point(6, 1), true), null, null, null, null, new Pieces.Pawn(new Point(6, 6), false), new Pieces.Knight(new Point(6, 7), false) },
+					{ new Pieces.Rook(new Point(7, 0), true), new Pieces.Pawn(new Point(7, 1), true), null, null, null, null, new Pieces.Pawn(new Point(7, 6), false), new Pieces.Rook(new Point(7, 7), false) }
+				};
+
+                for (int i = 0; i < chessPiece.Count(); i++)
+                {
+                    switch (chessPiece[i])
+                    {
+                        case 'K':
+                            Board[i, 0] = new Pieces.King(new Point(i, 0), true);
+                            Board[i, 7] = new Pieces.King(new Point(i, 7), false);
+							break;
+                        case 'R':
+                            Board[i, 0] = new Pieces.Rook(new Point(i, 0), true);
+                            Board[i, 7] = new Pieces.Rook(new Point(i, 7), false);
+                            break;
+						case 'Q':
+							Board[i, 0] = new Pieces.Queen(new Point(i, 0), true);
+							Board[i, 7] = new Pieces.Queen(new Point(i, 7), false);
+							break;
+						case 'B':
+							Board[i, 0] = new Pieces.Bishop(new Point(i, 0), true);
+							Board[i, 7] = new Pieces.Bishop(new Point(i, 7), false);
+							break;
+						case 'H':
+							Board[i, 0] = new Pieces.Knight(new Point(i, 0), true);
+							Board[i, 7] = new Pieces.Knight(new Point(i, 7), false);
+							break;
+
+					}
+                }
+
+			}
 
             InitialState = ToString();
+        }
+
+        private char[] getChess960Setup()
+        {
+			Random rand = new Random();
+
+            char[] output = { 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H' };
+            List<int> avaliablePos = new List<int>{ 0, 1, 2, 3, 4, 5, 6, 7 };
+            int minRookPos = 0;
+            int maxRookPos = 5;
+
+            // Rook Pos
+            int tempPos = rand.Next(minRookPos, maxRookPos + 1);
+            output[tempPos] = 'R';
+            minRookPos = tempPos + 2;
+            avaliablePos.Remove(tempPos);
+
+            int tempPos2 = rand.Next(minRookPos, 8);
+			output[tempPos2] = 'R';
+            avaliablePos.Remove(tempPos2);
+
+            // King Pos
+            tempPos = rand.Next(tempPos + 1, tempPos2);
+            output[tempPos] = 'K';
+            avaliablePos.Remove(tempPos);
+
+            //Bishop Pos
+
+            //split avali pos to odd/even 
+            List<int> avaliableOdd = new List<int>();
+            List<int> avaliableEven = new List<int>();
+            for (int i = 0; i < avaliablePos.Count; i++)
+            {
+				if (avaliablePos[i] % 2 == 0)
+                {
+                    avaliableEven.Add(avaliablePos[i]);
+                }
+                else
+                {
+					avaliableOdd.Add(avaliablePos[i]);
+				}
+            }
+            tempPos = avaliableEven[rand.Next(0, avaliableEven.Count)];
+            tempPos2 = avaliableOdd[rand.Next(0, avaliableOdd.Count)];
+            output[tempPos] = 'B';
+			output[tempPos2] = 'B';
+			avaliablePos.Remove(tempPos);
+			avaliablePos.Remove(tempPos2);
+
+            tempPos = avaliablePos[rand.Next(0, avaliablePos.Count())];
+            output[tempPos] = 'Q';
+            avaliablePos.Remove(tempPos);
+
+			return output;
         }
 
         /// <summary>

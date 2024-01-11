@@ -601,6 +601,23 @@ namespace Chess
             await CheckComputerMove();
         }
 
+        //TODO DoChess960
+        private async Task NewGame960()
+        {
+			cancelMoveComputation.Cancel();
+			cancelMoveComputation = new CancellationTokenSource();
+			game = new ChessGame(false);
+			currentBestMove = null;
+			manuallyEvaluating = false;
+			grabbedPiece = null;
+			highlightGrabbedMoves = false;
+			whiteEvaluation.Content = "?";
+			blackEvaluation.Content = "?";
+			UpdateGameDisplay();
+			UpdateCursor();
+			await CheckComputerMove();
+		}
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateGameDisplay();
@@ -814,11 +831,12 @@ namespace Chess
         }
 
         // Chess 960
+        //TODO nothing
         private async void NewGame960_Click(object sender, RoutedEventArgs e)
         {
             whiteIsComputer = false;
             blackIsComputer = false;
-            await NewGame();
+            await NewGame960();
         }
 
 
