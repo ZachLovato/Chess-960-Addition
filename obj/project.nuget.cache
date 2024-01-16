@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "8qR8DZhWpZfwC3IAj+bCFDCwC6owLlDM3uVqQo4sya+HiICHsritKXMzruidhNBYZPgiMKclQ4OCta0HqviSpg==",
+  "dgSpecHash": "qM1wydKSeBoGIhVWMfI22PaoDsZ6ukRzWUfsVaHgqgOgDlnf3WLP6w16WyRFfPdVtrf1Vbc6KOmeynb8RoOcDw==",
   "success": true,
   "projectFilePath": "C:\\Neumont\\NeuQ10\\ExistCodeBase\\Chess960\\Chess.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Zacharias Lovato\\.nuget\\packages\\extended.wpf.toolkit\\4.5.0\\extended.wpf.toolkit.4.5.0.nupkg.sha512",
-    "C:\\Users\\Zacharias Lovato\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+    "C:\\Users\\Zacharias Lovato\\.nuget\\packages\\extended.wpf.toolkit\\4.5.1\\extended.wpf.toolkit.4.5.1.nupkg.sha512",
+    "C:\\Users\\Zacharias Lovato\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
   "logs": []
 }

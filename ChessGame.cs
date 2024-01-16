@@ -91,26 +91,7 @@ namespace Chess
             StaleMoveCounter = 0;
             BoardCounts = new Dictionary<string, int>();
 
-            if (isDefault)
-            {
-				Board = new Pieces.Piece?[8, 8]
-			    {
-				    { new Pieces.Rook(new Point(0, 0), true), new Pieces.Pawn(new Point(0, 1), true), null, null, null, null, new Pieces.Pawn(new Point(0, 6), false), new Pieces.Rook(new Point(0, 7), false) },
-				    { new Pieces.Knight(new Point(1, 0), true), new Pieces.Pawn(new Point(1, 1), true), null, null, null, null, new Pieces.Pawn(new Point(1, 6), false), new Pieces.Knight(new Point(1, 7), false) },
-				    { new Pieces.Bishop(new Point(2, 0), true), new Pieces.Pawn(new Point(2, 1), true), null, null, null, null, new Pieces.Pawn(new Point(2, 6), false), new Pieces.Bishop(new Point(2, 7), false) },
-				    { new Pieces.Queen(new Point(3, 0), true), new Pieces.Pawn(new Point(3, 1), true), null, null, null, null, new Pieces.Pawn(new Point(3, 6), false), new Pieces.Queen(new Point(3, 7), false) },
-				    { WhiteKing, new Pieces.Pawn(new Point(4, 1), true), null, null, null, null, new Pieces.Pawn(new Point(4, 6), false), BlackKing },
-				    { new Pieces.Bishop(new Point(5, 0), true), new Pieces.Pawn(new Point(5, 1), true), null, null, null, null, new Pieces.Pawn(new Point(5, 6), false), new Pieces.Bishop(new Point(5, 7), false) },
-				    { new Pieces.Knight(new Point(6, 0), true), new Pieces.Pawn(new Point(6, 1), true), null, null, null, null, new Pieces.Pawn(new Point(6, 6), false), new Pieces.Knight(new Point(6, 7), false) },
-				    { new Pieces.Rook(new Point(7, 0), true), new Pieces.Pawn(new Point(7, 1), true), null, null, null, null, new Pieces.Pawn(new Point(7, 6), false), new Pieces.Rook(new Point(7, 7), false) }
-			    };
-			}
-            else
-            {
-                char[] chessPiece = getChess960Setup();
-
-
-				Board = new Pieces.Piece?[8, 8]
+			Board = new Pieces.Piece?[8, 8]
 				{
 					{ new Pieces.Rook(new Point(0, 0), true), new Pieces.Pawn(new Point(0, 1), true), null, null, null, null, new Pieces.Pawn(new Point(0, 6), false), new Pieces.Rook(new Point(0, 7), false) },
 					{ new Pieces.Knight(new Point(1, 0), true), new Pieces.Pawn(new Point(1, 1), true), null, null, null, null, new Pieces.Pawn(new Point(1, 6), false), new Pieces.Knight(new Point(1, 7), false) },
@@ -122,31 +103,36 @@ namespace Chess
 					{ new Pieces.Rook(new Point(7, 0), true), new Pieces.Pawn(new Point(7, 1), true), null, null, null, null, new Pieces.Pawn(new Point(7, 6), false), new Pieces.Rook(new Point(7, 7), false) }
 				};
 
+			if (!isDefault)
+            {
+                char[] chessPiece = getChess960Setup();
+                
+
                 for (int i = 0; i < chessPiece.Count(); i++)
                 {
+                    int j = 7 - i;
                     switch (chessPiece[i])
                     {
                         case 'K':
-                            Board[i, 0] = new Pieces.King(new Point(i, 0), true);
-                            Board[i, 7] = new Pieces.King(new Point(i, 7), false);
+                            Board[i, 0] = new Pieces.King(new Point(j, 0), true);
+                            Board[j, 7] = new Pieces.King(new Point(j, 7), false);
 							break;
                         case 'R':
                             Board[i, 0] = new Pieces.Rook(new Point(i, 0), true);
-                            Board[i, 7] = new Pieces.Rook(new Point(i, 7), false);
+                            Board[j, 7] = new Pieces.Rook(new Point(j, 7), false);
                             break;
 						case 'Q':
 							Board[i, 0] = new Pieces.Queen(new Point(i, 0), true);
-							Board[i, 7] = new Pieces.Queen(new Point(i, 7), false);
+							Board[j, 7] = new Pieces.Queen(new Point(j, 7), false);
 							break;
 						case 'B':
 							Board[i, 0] = new Pieces.Bishop(new Point(i, 0), true);
-							Board[i, 7] = new Pieces.Bishop(new Point(i, 7), false);
+							Board[j, 7] = new Pieces.Bishop(new Point(j, 7), false);
 							break;
 						case 'H':
 							Board[i, 0] = new Pieces.Knight(new Point(i, 0), true);
-							Board[i, 7] = new Pieces.Knight(new Point(i, 7), false);
+							Board[j, 7] = new Pieces.Knight(new Point(j, 7), false);
 							break;
-
 					}
                 }
 
@@ -208,6 +194,24 @@ namespace Chess
 
 			return output;
         }
+
+        public void getRookKingPositionPos(char[] pieces)
+        {
+            Random rand = new Random();
+
+            int minRookPos = 0;
+            int maxRookPos = 5;
+
+			int tempPos = rand.Next(minRookPos, maxRookPos + 1);
+			pieces[tempPos] = 'R';
+			minRookPos = tempPos + 2;
+
+			int tempPos2 = rand.Next(minRookPos, 8);
+			pieces[tempPos2] = 'R';
+
+			tempPos = rand.Next(tempPos + 1, tempPos2);
+			pieces[tempPos] = 'K';
+		}
 
         /// <summary>
         /// Create a new instance of a chess game, setting each game parameter to a non-default value
@@ -463,7 +467,7 @@ namespace Chess
                         {
                             AwaitingPromotionResponse = true;
                             PromotionPrompt prompt = new(CurrentTurnWhite);
-                            _ = prompt.ShowDialog();
+                            //_ = prompt.ShowDialog();
                             piece = (Pieces.Piece)Activator.CreateInstance(prompt.ChosenPieceType, piece.Position, piece.IsWhite)!;
                             AwaitingPromotionResponse = false;
                         }
