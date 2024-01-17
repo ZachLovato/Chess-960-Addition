@@ -195,7 +195,7 @@ namespace Chess
 			return output;
         }
 
-        public void getRookKingPositionPos(char[] pieces)
+        public void getRookKingPositionPos(char[] pieces, List<int> avaliablePos)
         {
             Random rand = new Random();
 
@@ -205,12 +205,47 @@ namespace Chess
 			int tempPos = rand.Next(minRookPos, maxRookPos + 1);
 			pieces[tempPos] = 'R';
 			minRookPos = tempPos + 2;
+			avaliablePos.Remove(tempPos);
 
 			int tempPos2 = rand.Next(minRookPos, 8);
 			pieces[tempPos2] = 'R';
+			avaliablePos.Remove(tempPos2);
 
 			tempPos = rand.Next(tempPos + 1, tempPos2);
 			pieces[tempPos] = 'K';
+			avaliablePos.Remove(tempPos);
+		}
+
+        public void getBishopPositionPos(char[] pieces, List<int> avaliablePos)
+        {
+			Random rand = new Random();
+
+			List<int> avaliableOdd = new List<int>();
+			List<int> avaliableEven = new List<int>();
+			for (int i = 0; i < avaliablePos.Count; i++)
+			{
+				if (avaliablePos[i] % 2 == 0)
+				{
+					avaliableEven.Add(avaliablePos[i]);
+				}
+				else
+				{
+					avaliableOdd.Add(avaliablePos[i]);
+				}
+			}
+			int tempPos = avaliableEven[rand.Next(0, avaliableEven.Count)];
+			int tempPos2 = avaliableOdd[rand.Next(0, avaliableOdd.Count)];
+			pieces[tempPos] = 'B';
+			pieces[tempPos2] = 'B';
+		}
+
+        public void getQueenPosition(char[] pieces, List<int> avaliablePos)
+        {
+			Random rand = new Random();
+
+			int tempPos = avaliablePos[rand.Next(0, avaliablePos.Count())];
+			pieces[tempPos] = 'Q';
+			avaliablePos.Remove(tempPos);
 		}
 
         /// <summary>

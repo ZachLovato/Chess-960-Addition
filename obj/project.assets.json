@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net8.0-windows7.0": {
+    "net6.0-windows7.0": {
       "Extended.Wpf.Toolkit/4.5.1": {
         "type": "package",
         "compile": {
@@ -155,7 +155,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net8.0-windows7.0": [
+    "net6.0-windows7.0": [
       "Extended.Wpf.Toolkit >= 4.5.1",
       "Newtonsoft.Json >= 13.0.3"
     ]
@@ -182,15 +182,15 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net8.0-Windows"
+        "net6.0-Windows"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net8.0-windows7.0": {
-          "targetAlias": "net8.0-Windows",
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-Windows",
           "projectReferences": {}
         }
       },
@@ -201,8 +201,8 @@
       }
     },
     "frameworks": {
-      "net8.0-windows7.0": {
-        "targetAlias": "net8.0-Windows",
+      "net6.0-windows7.0": {
+        "targetAlias": "net6.0-Windows",
         "dependencies": {
           "Extended.Wpf.Toolkit": {
             "target": "Package",
@@ -232,7 +232,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
